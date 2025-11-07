@@ -10,6 +10,8 @@ import com.andr3yqq.vulcanoeruptiongame.model.Tile;
 import com.andr3yqq.vulcanoeruptiongame.model.TileType;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
 
@@ -49,7 +51,9 @@ public class SimulationEngine {
     }
 
     private void moveCitizens(TickReport report) {
-        for (Citizen citizen : state.getCitizens()) {
+        List<Citizen> ordered = new ArrayList<>(state.getCitizens());
+        ordered.sort(Comparator.comparingInt(Citizen::getPriority).reversed().thenComparingInt(Citizen::getId));
+        for (Citizen citizen : ordered) {
             if (!citizen.isAlive() || citizen.isSafe()) {
                 continue;
             }

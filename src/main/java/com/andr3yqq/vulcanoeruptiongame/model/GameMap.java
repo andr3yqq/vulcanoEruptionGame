@@ -115,20 +115,11 @@ public class GameMap {
         return path;
     }
 
-    public static GameMap demoMap() {
-        String[] template = new String[]{
-                "WWWWWWWWWWWW",
-                "W..H....S..W",
-                "W..RRRRRR..W",
-                "W..RWWWWR..W",
-                "W..R....R..W",
-                "W..R.V..R..W",
-                "W..R....R..W",
-                "W..RRRRRR..W",
-                "W..H....S..W",
-                "WWWWWWWWWWWW"
-        };
+    public static GameMap fromTemplate(String... template) {
         int height = template.length;
+        if (height == 0) {
+            throw new IllegalArgumentException("Template must have at least one row");
+        }
         int width = template[0].length();
         Tile[][] grid = new Tile[height][width];
         List<Position> houses = new ArrayList<>();
@@ -136,6 +127,9 @@ public class GameMap {
         Position volcano = null;
 
         for (int y = 0; y < height; y++) {
+            if (template[y].length() != width) {
+                throw new IllegalArgumentException("All template rows must have the same width");
+            }
             for (int x = 0; x < width; x++) {
                 char symbol = template[y].charAt(x);
                 Tile tile;
@@ -163,5 +157,20 @@ public class GameMap {
             throw new IllegalStateException("Map template missing volcano vent");
         }
         return new GameMap(grid, houses, safeZones, volcano);
+    }
+
+    public static GameMap demoMap() {
+        return fromTemplate(
+                "WWWWWWWWWWWW",
+                "W..H....S..W",
+                "W..RRRRRR..W",
+                "W..RWWWWR..W",
+                "W..R....R..W",
+                "W..R.V..R..W",
+                "W..R....R..W",
+                "W..RRRRRR..W",
+                "W..H....S..W",
+                "WWWWWWWWWWWW"
+        );
     }
 }

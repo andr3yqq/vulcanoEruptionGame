@@ -30,6 +30,10 @@ public class SimulationConfig {
     }
 
     public static SimulationConfig defaultConfig() {
-        return new SimulationConfig(GameMap.demoMap(), 2, 2, 2);
+        return DifficultyLevel.NORMAL.createConfig();
+    }
+
+    public static SimulationConfig forDifficulty(DifficultyLevel level) {
+        return level.createConfig();
     }
 }

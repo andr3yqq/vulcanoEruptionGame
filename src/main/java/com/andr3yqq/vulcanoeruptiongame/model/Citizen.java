@@ -7,14 +7,16 @@ import java.util.Optional;
 public class Citizen {
     private final int id;
     private final CitizenType type;
+    private final int priority;
     private Position position;
     private boolean alive = true;
     private boolean safe = false;
     private Deque<Position> plannedPath = new ArrayDeque<>();
 
-    public Citizen(int id, CitizenType type, Position start) {
+    public Citizen(int id, CitizenType type, int priority, Position start) {
         this.id = id;
         this.type = type;
+        this.priority = priority;
         this.position = start;
     }
 
@@ -24,6 +26,10 @@ public class Citizen {
 
     public CitizenType getType() {
         return type;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 
     public Position getPosition() {

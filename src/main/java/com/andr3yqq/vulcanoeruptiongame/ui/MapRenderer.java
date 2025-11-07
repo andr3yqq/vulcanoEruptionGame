@@ -83,11 +83,21 @@ public class MapRenderer {
             Position position = citizen.getPosition();
             double px = position.x() * cellSize;
             double py = position.y() * cellSize;
-            double radius = cellSize * 0.35;
+            double diameter = cellSize * 0.35;
+            double cx = px + cellSize / 2;
+            double cy = py + cellSize / 2;
             gc.setFill(citizen.getType().name().equals("FAST") ? Color.CORNFLOWERBLUE : Color.LIGHTBLUE);
-            gc.fillOval(px + (cellSize - radius) / 2, py + (cellSize - radius) / 2, radius, radius);
+            gc.fillOval(cx - diameter / 2, cy - diameter / 2, diameter, diameter);
+            Color priorityColor = switch (citizen.getPriority()) {
+                case 3 -> Color.GOLD;
+                case 2 -> Color.ORANGE;
+                default -> Color.SLATEGRAY;
+            };
+            gc.setStroke(priorityColor);
+            gc.setLineWidth(2);
+            gc.strokeOval(cx - diameter / 2, cy - diameter / 2, diameter, diameter);
             gc.setFill(Color.BLACK);
-            gc.fillText(String.valueOf(citizen.getId()), px + cellSize / 2, py + cellSize / 2);
+            gc.fillText(String.valueOf(citizen.getId()), cx, cy);
         }
     }
 
@@ -105,8 +115,14 @@ public class MapRenderer {
     }
 
     public Position pickCell(double canvasX, double canvasY) {
+        if (cellSize <= 0) {
+            return new Position(0, 0);
+        }
         int gridX = (int) Math.floor(canvasX / cellSize);
         int gridY = (int) Math.floor(canvasY / cellSize);
+        GameMap map = engine.getState().getConfig().getMap();
+        gridX = Math.max(0, Math.min(map.getWidth() - 1, gridX));
+        gridY = Math.max(0, Math.min(map.getHeight() - 1, gridY));
         return new Position(gridX, gridY);
     }
 }

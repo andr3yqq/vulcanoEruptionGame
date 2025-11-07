@@ -35,9 +35,12 @@ public class SimulationState {
         List<Position> housePositions = config.getMap().getHouses();
         List<Citizen> citizens = new ArrayList<>();
         int count = 0;
+        Position volcano = config.getMap().getVolcanoSource();
         for (Position house : housePositions) {
             CitizenType type = (count % 2 == 0) ? CitizenType.SLOW : CitizenType.FAST;
-            citizens.add(new Citizen(count, type, house));
+            int manhattan = Math.abs(house.x() - volcano.x()) + Math.abs(house.y() - volcano.y());
+            int priority = manhattan <= 3 ? 3 : manhattan <= 6 ? 2 : 1;
+            citizens.add(new Citizen(count, type, priority, house));
             count++;
         }
         return new SimulationState(config, citizens);
