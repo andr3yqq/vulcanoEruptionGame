@@ -13,6 +13,8 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -23,6 +25,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -31,6 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * JavaFX front-end: draws the map, runs the simulation clock, and exposes player actions.
@@ -65,6 +69,7 @@ public class HelloApplication extends Application {
     private ObservableList<String> eventLogItems;
     private ListView<String> eventLogView;
     private DifficultyLevel currentDifficulty = DifficultyLevel.NORMAL;
+    private long lastProceduralSeed;
     private StackPane mapContainer;
     private Rectangle flashOverlay;
     private FadeTransition flashAnimation;
@@ -181,7 +186,14 @@ public class HelloApplication extends Application {
                 ? difficultyCombo.getValue()
                 : DifficultyLevel.NORMAL;
         currentDifficulty = selected;
-        SimulationConfig config = SimulationConfig.forDifficulty(selected);
+        SimulationConfig config;
+        if (selected.isProcedural()) {
+            lastProceduralSeed = ThreadLocalRandom.current().nextLong();
+            config = selected.createConfig(lastProceduralSeed);
+        } else {
+            lastProceduralSeed = 0L;
+            config = SimulationConfig.forDifficulty(selected);
+        }
         engine = new SimulationEngine(config);
         renderer = new MapRenderer(mapCanvas, engine);
         renderer.draw();
@@ -191,7 +203,11 @@ public class HelloApplication extends Application {
         updateSidebarTexts();
         updateActionButtons();
         statusLabel.setText("Pasiruošę startui (" + selected.getDisplayName() + ").");
-        logEvent("Sukurta nauja simuliacija (" + selected.getDisplayName() + "). Lava startuoja taške "
+        String baseMsg = "Sukurta nauja simuliacija (" + selected.getDisplayName() + ")";
+        if (selected.isProcedural()) {
+            baseMsg += " | seed=" + Long.toHexString(lastProceduralSeed);
+        }
+        logEvent(baseMsg + ". Lava startuoja taške "
                 + engine.getState().getConfig().getMap().getVolcanoSource());
         actionMode = ActionMode.NONE;
         if (actionToggleGroup != null) {

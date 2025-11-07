@@ -55,4 +55,8 @@ public final class MapPresets {
                 "WWWWWWWWWWWWWWWW"
         );
     }
+
+    public static GameMap proceduralMap(long seed) {
+        return RandomMapGenerator.generate(29, 23, 18, 3, seed);
+    }
 }
