@@ -8,6 +8,7 @@ import com.andr3yqq.vulcanoeruptiongame.model.SimulationOutcome;
 import com.andr3yqq.vulcanoeruptiongame.model.SimulationState;
 import com.andr3yqq.vulcanoeruptiongame.model.Tile;
 import com.andr3yqq.vulcanoeruptiongame.model.TileType;
+import lombok.Getter;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -20,16 +21,13 @@ import java.util.List;
  */
 public class SimulationEngine {
 
+    @Getter
     private final SimulationState state;
     private final GameMap map;
 
     public SimulationEngine(SimulationConfig config) {
         this.state = SimulationState.bootstrap(config);
         this.map = config.getMap();
-    }
-
-    public SimulationState getState() {
-        return state;
     }
 
     public TickReport tick() {

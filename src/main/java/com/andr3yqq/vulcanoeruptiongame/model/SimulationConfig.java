@@ -1,5 +1,8 @@
 package com.andr3yqq.vulcanoeruptiongame.model;
 
+import lombok.Getter;
+
+@Getter
 public class SimulationConfig {
     private final GameMap map;
     private final int barricadeActions;
@@ -11,22 +14,6 @@ public class SimulationConfig {
         this.barricadeActions = barricadeActions;
         this.openRoadActions = openRoadActions;
         this.lavaSpreadInterval = lavaSpreadInterval;
-    }
-
-    public GameMap getMap() {
-        return map;
-    }
-
-    public int getBarricadeActions() {
-        return barricadeActions;
-    }
-
-    public int getOpenRoadActions() {
-        return openRoadActions;
-    }
-
-    public int getLavaSpreadInterval() {
-        return lavaSpreadInterval;
     }
 
     public static SimulationConfig defaultConfig() {

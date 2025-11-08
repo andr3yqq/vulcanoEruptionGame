@@ -1,5 +1,8 @@
 package com.andr3yqq.vulcanoeruptiongame.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -7,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Getter
 public class SimulationState {
     private final SimulationConfig config;
     private final List<Citizen> citizens;
@@ -18,6 +22,7 @@ public class SimulationState {
     private int openRoadActionsLeft;
     private int savedCount;
     private int lostCount;
+    @Setter
     private SimulationOutcome outcome = SimulationOutcome.RUNNING;
 
     private SimulationState(SimulationConfig config, List<Citizen> citizens) {
@@ -46,24 +51,8 @@ public class SimulationState {
         return new SimulationState(config, citizens);
     }
 
-    public SimulationConfig getConfig() {
-        return config;
-    }
-
-    public List<Citizen> getCitizens() {
-        return citizens;
-    }
-
-    public int getTick() {
-        return tick;
-    }
-
     public void incrementTick() {
         this.tick++;
-    }
-
-    public int getBarricadeActionsLeft() {
-        return barricadeActionsLeft;
     }
 
     public void decrementBarricade() {
@@ -72,38 +61,10 @@ public class SimulationState {
         }
     }
 
-    public int getOpenRoadActionsLeft() {
-        return openRoadActionsLeft;
-    }
-
     public void decrementOpenRoad() {
         if (openRoadActionsLeft > 0) {
             openRoadActionsLeft--;
         }
-    }
-
-    public int getSavedCount() {
-        return savedCount;
-    }
-
-    public int getLostCount() {
-        return lostCount;
-    }
-
-    public Set<Position> getLavaCells() {
-        return lavaCells;
-    }
-
-    public Deque<Position> getLavaFront() {
-        return lavaFront;
-    }
-
-    public SimulationOutcome getOutcome() {
-        return outcome;
-    }
-
-    public void setOutcome(SimulationOutcome outcome) {
-        this.outcome = outcome;
     }
 
     public void markCitizenSafe(Citizen citizen) {

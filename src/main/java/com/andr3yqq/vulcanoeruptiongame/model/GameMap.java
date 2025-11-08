@@ -1,5 +1,7 @@
 package com.andr3yqq.vulcanoeruptiongame.model;
 
+import lombok.Getter;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.Queue;
  * Immutable layout describing roads/houses/safe zones. Dynamic state (lava, barricades)
  * lives inside {@link Tile} instances.
  */
+@Getter
 public class GameMap {
 
     private final Tile[][] grid;
@@ -36,18 +39,6 @@ public class GameMap {
 
     public Tile getTile(Position p) {
         return grid[p.y()][p.x()];
-    }
-
-    public List<Position> getHouses() {
-        return houses;
-    }
-
-    public List<Position> getSafeZones() {
-        return safeZones;
-    }
-
-    public Position getVolcanoSource() {
-        return volcanoSource;
     }
 
     public boolean isInside(Position p) {

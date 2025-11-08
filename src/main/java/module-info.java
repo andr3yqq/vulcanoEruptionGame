@@ -6,6 +6,7 @@ module com.andr3yqq.vulcanoeruptiongame {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+    requires static lombok;
 
     opens com.andr3yqq.vulcanoeruptiongame to javafx.fxml;
     exports com.andr3yqq.vulcanoeruptiongame;

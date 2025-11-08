@@ -1,22 +1,19 @@
 package com.andr3yqq.vulcanoeruptiongame.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Represents a cell on the grid. Houses and safe zones are traversable, walls are not.
  */
+@Getter
+@Setter
 public class Tile {
     private TileType type;
     private boolean barricaded;
     private boolean lava;
 
     public Tile(TileType type) {
-        this.type = type;
-    }
-
-    public TileType getType() {
-        return type;
-    }
-
-    public void setType(TileType type) {
         this.type = type;
     }
 
@@ -30,19 +27,8 @@ public class Tile {
         };
     }
 
-    public boolean isBarricaded() {
-        return barricaded;
-    }
-
-    public void setBarricaded(boolean barricaded) {
-        this.barricaded = barricaded;
-    }
-
     public boolean hasLava() {
         return lava;
     }
 
-    public void setLava(boolean lava) {
-        this.lava = lava;
-    }
 }
