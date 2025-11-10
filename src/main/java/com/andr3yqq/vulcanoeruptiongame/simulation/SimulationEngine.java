@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Pure simulation logic; the UI layer will call {@link #tick()} on a schedule.
@@ -97,31 +99,25 @@ public class SimulationEngine {
     }
 
     private void spreadLava(TickReport report) {
-        Deque<Position> front = state.getLavaFront();
-        int expansions = front.size();
-        if (expansions == 0) {
-            return;
-        }
-        Deque<Position> newFront = new ArrayDeque<>();
-        for (int i = 0; i < expansions; i++) {
-            Position source = front.pollFirst();
+        Set<Position> newCells = new HashSet<>();
+        List<Position> sources = new ArrayList<>(state.getLavaCells());
+        for (Position source : sources) {
             for (Position neighbor : map.neighbors(source)) {
-                if (state.getLavaCells().contains(neighbor)) {
+                if (state.getLavaCells().contains(neighbor) || newCells.contains(neighbor)) {
                     continue;
                 }
                 Tile tile = map.getTile(neighbor);
                 if (tile.isBarricaded()) {
-                    tile.setBarricaded(false); // barricade buys time but melts here
+                    tile.setBarricaded(false); // melts this tick, lava proceeds next tick
                     continue;
                 }
                 tile.setLava(true);
-                state.getLavaCells().add(neighbor);
-                newFront.addLast(neighbor);
+                newCells.add(neighbor);
                 report.getNewLavaTiles().add(neighbor);
                 eliminateCitizensOn(neighbor, report);
             }
         }
-        front.addAll(newFront);
+        state.getLavaCells().addAll(newCells);
     }
 
     private void eliminateCitizensOn(Position tilePos, TickReport report) {

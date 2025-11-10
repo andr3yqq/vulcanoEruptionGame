@@ -3,9 +3,7 @@ package com.andr3yqq.vulcanoeruptiongame.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,7 +13,6 @@ public class SimulationState {
     private final SimulationConfig config;
     private final List<Citizen> citizens;
     private final Set<Position> lavaCells = new HashSet<>();
-    private final Deque<Position> lavaFront = new ArrayDeque<>();
 
     private int tick;
     private int barricadeActionsLeft;
@@ -32,7 +29,6 @@ public class SimulationState {
         this.openRoadActionsLeft = config.getOpenRoadActions();
         Position volcano = config.getMap().getVolcanoSource();
         lavaCells.add(volcano);
-        lavaFront.add(volcano);
         config.getMap().getTile(volcano).setLava(true);
     }
 
