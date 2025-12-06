@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Pure simulation logic; the UI layer will call {@link #tick()} on a schedule.
@@ -26,10 +26,15 @@ public class SimulationEngine {
     @Getter
     private final SimulationState state;
     private final GameMap map;
+    private final List<SimulationListener> listeners = new CopyOnWriteArrayList<>();
 
     public SimulationEngine(SimulationConfig config) {
         this.state = SimulationState.bootstrap(config);
         this.map = config.getMap();
+    }
+
+    public void addListener(SimulationListener listener) {
+        listeners.add(listener);
     }
 
     public TickReport tick() {
@@ -47,6 +52,7 @@ public class SimulationEngine {
             spreadLava(report);
         }
         evaluateOutcome(report);
+        notifyListeners(report);
         return report;
     }
 
@@ -94,30 +100,16 @@ public class SimulationEngine {
             if (!deque.isEmpty()) {
                 deque.pollFirst(); // remove current tile
             }
-            citizen.setPath(deque);
+            citizen.setPlannedPath(deque);
         });
     }
 
     private void spreadLava(TickReport report) {
-        Set<Position> newCells = new HashSet<>();
-        List<Position> sources = new ArrayList<>(state.getLavaCells());
-        for (Position source : sources) {
-            for (Position neighbor : map.neighbors(source)) {
-                if (state.getLavaCells().contains(neighbor) || newCells.contains(neighbor)) {
-                    continue;
-                }
-                Tile tile = map.getTile(neighbor);
-                if (tile.isBarricaded()) {
-                    tile.setBarricaded(false); // melts this tick, lava proceeds next tick
-                    continue;
-                }
-                tile.setLava(true);
-                newCells.add(neighbor);
-                report.getNewLavaTiles().add(neighbor);
-                eliminateCitizensOn(neighbor, report);
-            }
+        Set<Position> newCells = state.getConfig().getLavaStrategy().spread(map, state);
+        report.getNewLavaTiles().addAll(newCells);
+        for (Position pos : newCells) {
+            eliminateCitizensOn(pos, report);
         }
-        state.getLavaCells().addAll(newCells);
     }
 
     private void eliminateCitizensOn(Position tilePos, TickReport report) {
@@ -140,6 +132,14 @@ public class SimulationEngine {
             state.setOutcome(SimulationOutcome.FAILURE);
         }
         report.setOutcome(state.getOutcome());
+    }
+
+    private void notifyListeners(TickReport report) {
+        SimulationStateView view = new SimulationStateView(state);
+        listeners.forEach(listener -> {
+            listener.onTick(report);
+            listener.onStateChanged(view);
+        });
     }
 
     public boolean buildBarricade(Position position) {

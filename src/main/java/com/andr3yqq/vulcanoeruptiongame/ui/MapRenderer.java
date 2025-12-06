@@ -4,7 +4,6 @@ import com.andr3yqq.vulcanoeruptiongame.model.Citizen;
 import com.andr3yqq.vulcanoeruptiongame.model.GameMap;
 import com.andr3yqq.vulcanoeruptiongame.model.Position;
 import com.andr3yqq.vulcanoeruptiongame.model.Tile;
-import com.andr3yqq.vulcanoeruptiongame.model.TileType;
 import com.andr3yqq.vulcanoeruptiongame.simulation.SimulationEngine;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
@@ -12,13 +11,15 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import lombok.Setter;
 
 /**
  * Draws the grid-based map, lava spread, and citizens onto a provided canvas.
  */
 public class MapRenderer {
     private final Canvas canvas;
-    private final SimulationEngine engine;
+    @Setter
+    private SimulationEngine engine;
     private double cellSize;
 
     public MapRenderer(Canvas canvas, SimulationEngine engine) {

@@ -57,6 +57,10 @@ public final class MapPresets {
     }
 
     public static GameMap proceduralMap(long seed) {
-        return RandomMapGenerator.generate(29, 23, 18, 3, seed);
+        return proceduralMap(seed, 29, 23, 18, 3);
+    }
+
+    public static GameMap proceduralMap(long seed, int width, int height, int houses, int safeZones) {
+        return RandomMapGenerator.generate(width, height, houses, safeZones, seed);
     }
 }
