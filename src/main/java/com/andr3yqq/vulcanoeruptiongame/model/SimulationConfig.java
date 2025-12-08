@@ -1,6 +1,7 @@
 package com.andr3yqq.vulcanoeruptiongame.model;
 
 import lombok.Getter;
+import com.andr3yqq.vulcanoeruptiongame.simulation.LavaSpreadStrategy;
 
 @Getter
 public class SimulationConfig {
@@ -8,10 +9,10 @@ public class SimulationConfig {
     private final int barricadeActions;
     private final int openRoadActions;
     private final int lavaSpreadInterval;
-    private final com.andr3yqq.vulcanoeruptiongame.simulation.LavaSpreadStrategy lavaStrategy;
+    private final LavaSpreadStrategy lavaStrategy;
 
     public SimulationConfig(GameMap map, int barricadeActions, int openRoadActions, int lavaSpreadInterval,
-                           com.andr3yqq.vulcanoeruptiongame.simulation.LavaSpreadStrategy lavaStrategy) {
+                           LavaSpreadStrategy lavaStrategy) {
         this.map = map;
         this.barricadeActions = barricadeActions;
         this.openRoadActions = openRoadActions;

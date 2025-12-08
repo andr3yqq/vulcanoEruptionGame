@@ -15,6 +15,8 @@ import java.util.Random;
  */
 public final class RandomMapGenerator {
 
+    private static final double ROAD_CHANCE = 0.12;
+
     private RandomMapGenerator() {
     }
 
@@ -30,7 +32,7 @@ public final class RandomMapGenerator {
 
         Random random = new Random(seed);
         carveMaze(layout, random);
-        openExtraPassages(layout, random, 0.12);
+        openExtraPassages(layout, random, ROAD_CHANCE);
 
         List<Position> roadTiles = collectRoads(layout);
         if (roadTiles.isEmpty()) {
