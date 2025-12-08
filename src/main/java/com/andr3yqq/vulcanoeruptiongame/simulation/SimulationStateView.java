@@ -1,6 +1,7 @@
 package com.andr3yqq.vulcanoeruptiongame.simulation;
 
 import com.andr3yqq.vulcanoeruptiongame.model.SimulationState;
+import com.andr3yqq.vulcanoeruptiongame.model.SimulationOutcome;
 import lombok.Getter;
 
 /**
@@ -13,7 +14,7 @@ public class SimulationStateView {
     private final int lostCount;
     private final int barricadeActionsLeft;
     private final int openRoadActionsLeft;
-    private final com.andr3yqq.vulcanoeruptiongame.model.SimulationOutcome outcome;
+    private final SimulationOutcome outcome;
 
     public SimulationStateView(SimulationState state) {
         this.tick = state.getTick();
